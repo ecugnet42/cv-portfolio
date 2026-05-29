@@ -836,133 +836,80 @@ document.addEventListener('keydown', function(e) { if(e.key==='Escape') closeVid
   border-bottom: 3px solid #c9a84c;
   box-shadow: 0 4px 28px rgba(0,0,0,0.35);
 }
-
-/* Desktop layout */
 .sales-banner-inner {
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 0 40px;
-  height: 68px;
-  gap: 20px;
+  height: 64px;
   max-width: 1400px;
   margin: 0 auto;
 }
 .sales-banner-left {
-  display: flex; align-items: center; gap: 14px; flex-shrink: 0;
+  display: flex; align-items: center; gap: 10px;
 }
-.sales-banner-badge {
+.sales-banner-dot {
+  width: 8px; height: 8px; border-radius: 50%;
   background: #c9a84c;
-  color: #0f2027;
+  animation: dotPulse 2s ease-in-out infinite;
+}
+@keyframes dotPulse {
+  0%,100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(1.4); }
+}
+.sales-banner-tagline {
   font-family: sans-serif;
-  font-size: 0.62rem; font-weight: 800;
-  letter-spacing: 2px; text-transform: uppercase;
-  padding: 5px 12px; border-radius: 6px; white-space: nowrap;
+  font-size: 0.82rem; font-weight: 600;
+  color: rgba(255,255,255,0.75);
+  letter-spacing: 0.3px;
 }
-.sales-banner-price {
-  display: flex; align-items: baseline; gap: 7px;
-}
-.sales-banner-old {
-  font-family: sans-serif;
-  font-size: 0.85rem; color: rgba(255,255,255,0.35);
-  text-decoration: line-through; font-weight: 500;
-}
-.sales-banner-new {
-  font-family: sans-serif;
-  font-size: 1.45rem; font-weight: 900; color: #c9a84c; line-height: 1;
-}
-.sales-banner-center {
-  display: flex; align-items: center; gap: 20px;
-  flex: 1; justify-content: center;
-}
-.sales-banner-feature {
-  display: flex; align-items: center; gap: 6px;
-  font-family: sans-serif; font-size: 0.76rem;
-  color: rgba(255,255,255,0.8); white-space: nowrap; font-weight: 500;
-}
-.sales-banner-feature::before {
-  content: "✓"; color: #c9a84c; font-weight: 900; font-size: 0.82rem;
-}
-.sales-banner-divider {
-  width: 1px; height: 24px;
-  background: rgba(201,168,76,0.25); flex-shrink: 0;
-}
+.sales-banner-tagline span { color: #c9a84c; }
+.sales-banner-center { flex: 1; }
 .sales-banner-right { flex-shrink: 0; }
 .sales-banner-btn {
-  background: transparent; color: #c9a84c;
-  border: 2px solid #c9a84c;
-  padding: 10px 24px; border-radius: 8px;
-  font-family: sans-serif; font-size: 0.8rem; font-weight: 800;
-  letter-spacing: 1px; text-transform: uppercase;
-  cursor: pointer; transition: all 0.2s; white-space: nowrap;
+  background: #c9a84c; color: #0f2027;
+  border: none; padding: 11px 28px; border-radius: 8px;
+  font-family: sans-serif; font-size: 0.82rem; font-weight: 800;
+  letter-spacing: 0.5px; cursor: pointer;
+  transition: all 0.2s; white-space: nowrap;
+  box-shadow: 0 3px 14px rgba(201,168,76,0.35);
 }
 .sales-banner-btn:hover {
-  background: #c9a84c; color: #0f2027;
-  box-shadow: 0 4px 20px rgba(201,168,76,0.4);
+  background: #e0b84e;
+  box-shadow: 0 5px 22px rgba(201,168,76,0.55);
   transform: translateY(-1px);
 }
 
-/* MOBILE layout — stacked 2 rows */
+/* Mobile */
 .sales-banner-mobile { display: none; }
-
 @media (max-width: 768px) {
   .sales-banner-inner { display: none; }
   .sales-banner-mobile {
     display: flex;
-    flex-direction: column;
-    padding: 10px 16px;
-    gap: 8px;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    gap: 12px;
   }
-  .sales-banner-mobile-top {
-    display: flex; align-items: center; justify-content: space-between; gap: 10px;
-  }
-  .sales-banner-mobile-left {
-    display: flex; align-items: center; gap: 8px;
-  }
-  .sales-banner-badge-sm {
-    background: #c9a84c; color: #0f2027;
+  .sales-banner-tagline-sm {
     font-family: sans-serif;
-    font-size: 0.58rem; font-weight: 800; letter-spacing: 1.5px;
-    text-transform: uppercase; padding: 4px 9px; border-radius: 5px;
+    font-size: 0.75rem; font-weight: 600;
+    color: rgba(255,255,255,0.75);
   }
-  .sales-banner-price-sm {
-    display: flex; align-items: baseline; gap: 5px;
-  }
-  .sales-banner-old-sm {
-    font-family: sans-serif; font-size: 0.78rem;
-    color: rgba(255,255,255,0.35); text-decoration: line-through;
-  }
-  .sales-banner-new-sm {
-    font-family: sans-serif; font-size: 1.2rem;
-    font-weight: 900; color: #c9a84c;
-  }
+  .sales-banner-tagline-sm span { color: #c9a84c; }
   .sales-banner-btn-sm {
     background: #c9a84c; color: #0f2027;
-    border: none; padding: 8px 16px; border-radius: 7px;
-    font-family: sans-serif; font-size: 0.72rem; font-weight: 800;
-    letter-spacing: 0.5px; text-transform: uppercase;
+    border: none; padding: 9px 18px; border-radius: 7px;
+    font-family: sans-serif; font-size: 0.74rem; font-weight: 800;
     cursor: pointer; white-space: nowrap; flex-shrink: 0;
   }
-  .sales-banner-mobile-features {
-    display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
-  }
-  .sales-banner-feat-sm {
-    font-family: sans-serif; font-size: 0.68rem;
-    color: rgba(255,255,255,0.7); font-weight: 500;
-    display: flex; align-items: center; gap: 4px;
-  }
-  .sales-banner-feat-sm::before {
-    content: "✓"; color: #c9a84c; font-weight: 900;
-  }
-  nav { top: 88px !important; }
-  #hero { padding-top: 180px !important; }
-  .hero-left { padding-top: 180px !important; }
+  nav { top: 58px !important; }
+  #hero { padding-top: 150px !important; }
+  .hero-left { padding-top: 0 !important; }
 }
-
-/* Desktop nav offset */
 @media (min-width: 769px) {
-  nav { top: 68px !important; }
-  #hero { padding-top: 168px !important; }
+  nav { top: 64px !important; }
+  #hero { padding-top: 164px !important; }
   .hero-left { padding-top: 0 !important; }
 }
 
@@ -1035,40 +982,18 @@ document.addEventListener('keydown', function(e) { if(e.key==='Escape') closeVid
   <!-- Desktop -->
   <div class="sales-banner-inner">
     <div class="sales-banner-left">
-      <div class="sales-banner-badge">✦ Offre spéciale</div>
-      <div class="sales-banner-price">
-        <span class="sales-banner-old">197€</span>
-        <span class="sales-banner-new">97€</span>
-      </div>
+      <div class="sales-banner-dot"></div>
+      <div class="sales-banner-tagline">Transforme ton CV en <span>site web interactif</span></div>
     </div>
-    <div class="sales-banner-center">
-      <div class="sales-banner-feature">CV interactif complet</div>
-      <div class="sales-banner-divider"></div>
-      <div class="sales-banner-feature">Formation installation</div>
-      <div class="sales-banner-divider"></div>
-      <div class="sales-banner-feature">SAV WhatsApp</div>
-    </div>
+    <div class="sales-banner-center"></div>
     <div class="sales-banner-right">
-      <button class="sales-banner-btn" onclick="openSales()">Booster mon CV</button>
+      <button class="sales-banner-btn" onclick="openSales()">✦ Découvrir mon offre</button>
     </div>
   </div>
   <!-- Mobile -->
   <div class="sales-banner-mobile">
-    <div class="sales-banner-mobile-top">
-      <div class="sales-banner-mobile-left">
-        <div class="sales-banner-badge-sm">✦ Offre</div>
-        <div class="sales-banner-price-sm">
-          <span class="sales-banner-old-sm">197€</span>
-          <span class="sales-banner-new-sm">97€</span>
-        </div>
-      </div>
-      <button class="sales-banner-btn-sm" onclick="openSales()">Booster mon CV</button>
-    </div>
-    <div class="sales-banner-mobile-features">
-      <div class="sales-banner-feat-sm">CV interactif</div>
-      <div class="sales-banner-feat-sm">Formation</div>
-      <div class="sales-banner-feat-sm">SAV WhatsApp</div>
-    </div>
+    <div class="sales-banner-tagline-sm">CV web <span>interactif</span></div>
+    <button class="sales-banner-btn-sm" onclick="openSales()">✦ Découvrir mon offre</button>
   </div>
 </div>
 
