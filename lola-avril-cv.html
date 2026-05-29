@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lola Avril — Direction Artistique & Design Graphique</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@300;400;500&display=swap');
+
+  :root {
+    --pink: #e8387a;
+    --magenta: #c4006a;
+    --yellow: #f5c842;
+    --dark: #1a1a1a;
+    --light: #fdf8f5;
+    --gray: #888;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--light);
+    color: var(--dark);
+    overflow-x: hidden;
+  }
+
+  nav {
+    position: fixed; top: 0; left: 0; right: 0;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 18px 48px;
+    background: rgba(253,248,245,0.92);
+    backdrop-filter: blur(10px);
+    z-index: 100;
+    border-bottom: 1px solid rgba(232,56,122,0.15);
+  }
+  .nav-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem; font-weight: 900;
+    color: var(--pink);
+    letter-spacing: -1px;
+    cursor: pointer;
+  }
+  .nav-links { display: flex; gap: 32px; }
+  .nav-links a {
+    text-decoration: none; color: var(--dark);
+    font-size: 0.85rem; font-weight: 500; letter-spacing: 1.5px;
+    text-transform: uppercase;
+    transition: color 0.2s;
+    cursor: pointer;
+  }
+  .nav-links a:hover { color: var(--pink); }
+
+  #hero {
+    min-height: 100vh;
+    display: grid; grid-template-columns: 1fr 1fr;
+    padding: 100px 48px 60px;
+    align-items: center;
+    gap: 60px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-bg-shape {
+    position: absolute; top: -80px; right: -80px;
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(232,56,122,0.12) 0%, transparent 70%);
+    border-radius: 50%; pointer-events: none;
+  }
+  .hero-bg-shape2 {
+    position: absolute; bottom: 40px; left: 20px;
+    width: 300px; height: 300px;
+    background: radial-gradient(circle, rgba(245,200,66,0.18) 0%, transparent 70%);
+    border-radius: 50%; pointer-events: none;
+  }
+  .hero-left { z-index: 1; }
+  .hero-tag {
+    display: inline-block;
+    background: var(--yellow);
+    color: var(--dark);
+    font-size: 0.72rem; font-weight: 500; letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 6px 14px; border-radius: 100px;
+    margin-bottom: 20px;
+  }
+  .hero-name {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(3.5rem, 7vw, 6rem);
+    font-weight: 900; line-height: 0.9;
+    letter-spacing: -3px;
+    color: var(--dark);
+  }
+  .hero-name span { color: var(--pink); font-style: italic; }
+  .hero-title {
+    margin: 24px 0 12px;
+    font-size: 1rem; font-weight: 300; color: var(--gray);
+    letter-spacing: 0.5px; line-height: 1.5;
+  }
+  .hero-subtitle {
+    font-size: 0.9rem; color: var(--gray);
+    line-height: 1.6; max-width: 400px;
+  }
+  .hero-cta {
+    margin-top: 36px; display: flex; gap: 16px; align-items: center; flex-wrap: wrap;
+  }
+  .btn-primary {
+    background: var(--pink); color: white;
+    border: none; padding: 14px 30px;
+    border-radius: 100px; font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem; font-weight: 500; cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    text-decoration: none; display: inline-block;
+  }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(232,56,122,0.35); }
+  .btn-secondary {
+    background: transparent; color: var(--dark);
+    border: 1.5px solid var(--dark); padding: 13px 28px;
+    border-radius: 100px; font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem; font-weight: 500; cursor: pointer;
+    transition: all 0.2s; text-decoration: none; display: inline-block;
+  }
+  .btn-secondary:hover { border-color: var(--pink); color: var(--pink); }
+
+  .hero-right {
+    z-index: 1;
+    display: flex; flex-direction: column; align-items: center; gap: 20px;
+  }
+  .hero-photo-wrapper {
+    position: relative; width: 280px; height: 320px;
+  }
+  .hero-photo-bg {
+    position: absolute; inset: 0;
+    background: linear-gradient(135deg, var(--pink) 0%, var(--magenta) 100%);
+    border-radius: 200px 200px 160px 160px;
+    transform: rotate(3deg);
+  }
+  .hero-photo-inner {
+    position: absolute; inset: 8px;
+    background: #f0e8e4;
+    border-radius: 180px 180px 140px 140px;
+    overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Playfair Display', serif;
+    font-size: 4rem; font-weight: 900; color: var(--pink);
+    letter-spacing: -2px;
+  }
+  .deco-star {
+    position: absolute; font-size: 1.5rem;
+    animation: spin 8s linear infinite;
+  }
+  .deco-star.s1 { top: -10px; right: -20px; }
+  .deco-star.s2 { bottom: 10px; left: -24px; animation-direction: reverse; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .traits-wrapper {
+    display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;
+  }
+  .trait-pill {
+    background: white; border: 1.5px solid rgba(232,56,122,0.2);
+    padding: 8px 16px; border-radius: 100px;
+    font-size: 0.8rem; font-weight: 500; color: var(--dark);
+    display: flex; align-items: center; gap: 8px;
+    transition: all 0.2s; cursor: default;
+  }
+  .trait-pill:hover { border-color: var(--pink); color: var(--pink); transform: translateY(-1px); }
+  .trait-dot { width: 7px; height: 7px; background: var(--pink); border-radius: 50%; }
+
+  section {
+    padding: 90px 48px;
+    max-width: 1100px; margin: 0 auto;
+    display: none;
+    animation: fadeIn 0.5s ease;
+  }
+  section.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+  .section-header {
+    display: flex; align-items: baseline; gap: 16px; margin-bottom: 56px;
+  }
+  .section-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 4rem; font-weight: 900; color: rgba(232,56,122,0.12);
+    line-height: 1; letter-spacing: -2px;
+  }
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.4rem; font-weight: 700; color: var(--dark);
+    letter-spacing: -1px;
+  }
+  .section-title span { color: var(--pink); font-style: italic; }
+
+  .timeline { position: relative; padding-left: 32px; }
+  .timeline::before {
+    content: ''; position: absolute; left: 0; top: 0; bottom: 0;
+    width: 2px; background: linear-gradient(to bottom, var(--pink), var(--yellow));
+    border-radius: 2px;
+  }
+  .timeline-item {
+    position: relative; margin-bottom: 40px;
+    padding: 28px 32px;
+    background: white;
+    border-radius: 16px;
+    border: 1px solid rgba(232,56,122,0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .timeline-item:hover {
+    transform: translateX(4px);
+    box-shadow: 0 8px 32px rgba(232,56,122,0.12);
+    border-color: rgba(232,56,122,0.3);
+  }
+  .timeline-dot {
+    position: absolute; left: -40px; top: 32px;
+    width: 14px; height: 14px; border-radius: 50%;
+    background: var(--pink); border: 3px solid var(--light);
+    box-shadow: 0 0 0 2px var(--pink);
+  }
+  .timeline-date {
+    font-size: 0.72rem; font-weight: 500; letter-spacing: 2px;
+    text-transform: uppercase; color: var(--pink);
+    margin-bottom: 8px;
+  }
+  .timeline-degree {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem; font-weight: 700;
+    color: var(--dark); margin-bottom: 8px;
+  }
+  .timeline-school { font-size: 1rem; font-weight: 500; color: var(--dark); margin-bottom: 4px; }
+  .timeline-detail { font-size: 0.85rem; color: var(--gray); line-height: 1.5; }
+
+  .xp-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 24px; }
+  .xp-card {
+    background: white; border-radius: 20px;
+    padding: 28px; border: 1px solid rgba(232,56,122,0.1);
+    transition: all 0.25s; position: relative; overflow: hidden;
+  }
+  .xp-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--pink), var(--yellow));
+    transform: scaleX(0); transform-origin: left;
+    transition: transform 0.3s;
+  }
+  .xp-card:hover::before { transform: scaleX(1); }
+  .xp-card:hover { transform: translateY(-4px); box-shadow: 0 12px 40px rgba(232,56,122,0.12); }
+  .xp-type { font-size: 0.68rem; letter-spacing: 2px; text-transform: uppercase; color: var(--pink); font-weight: 500; margin-bottom: 10px; }
+  .xp-date { font-size: 0.75rem; color: var(--gray); font-weight: 400; margin-bottom: 4px; }
+  .xp-role { font-family: 'Playfair Display', serif; font-size: 1.15rem; font-weight: 700; color: var(--dark); margin-bottom: 6px; }
+  .xp-company { font-size: 0.9rem; font-weight: 500; color: var(--pink); margin-bottom: 12px; }
+  .xp-tasks { font-size: 0.82rem; color: var(--gray); line-height: 1.65; }
+
+  .skills-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; }
+  .skills-col h3 { font-family: 'Playfair Display', serif; font-size: 1.3rem; font-weight: 700; margin-bottom: 24px; color: var(--dark); }
+  .skill-bar-item { margin-bottom: 20px; }
+  .skill-bar-label { display: flex; justify-content: space-between; font-size: 0.82rem; font-weight: 500; color: var(--dark); margin-bottom: 8px; }
+  .skill-bar-track { height: 6px; background: rgba(232,56,122,0.12); border-radius: 4px; overflow: hidden; }
+  .skill-bar-fill { height: 100%; border-radius: 4px; background: linear-gradient(90deg, var(--pink), var(--yellow)); transition: width 1s cubic-bezier(.4,0,.2,1); }
+  .tag-list { display: flex; flex-wrap: wrap; gap: 10px; }
+  .tag { background: white; border: 1.5px solid rgba(232,56,122,0.25); padding: 8px 16px; border-radius: 100px; font-size: 0.8rem; color: var(--dark); font-weight: 400; transition: all 0.2s; }
+  .tag:hover { background: var(--pink); color: white; border-color: var(--pink); }
+  .lang-badge { display: inline-flex; align-items: center; gap: 8px; background: white; border: 1.5px solid rgba(232,56,122,0.2); padding: 10px 18px; border-radius: 12px; font-size: 0.85rem; font-weight: 500; margin-bottom: 10px; transition: all 0.2s; }
+  .lang-badge:hover { border-color: var(--pink); }
+  .lang-level { font-size: 0.72rem; color: var(--pink); font-weight: 500; margin-left: 4px; }
+
+  .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: start; }
+  .contact-intro { font-family: 'Playfair Display', serif; font-size: 2rem; font-weight: 700; color: var(--dark); line-height: 1.2; margin-bottom: 24px; }
+  .contact-intro span { color: var(--pink); font-style: italic; }
+  .contact-text { font-size: 0.9rem; color: var(--gray); line-height: 1.7; }
+  .contact-items { display: flex; flex-direction: column; gap: 16px; }
+  .contact-item { display: flex; align-items: center; gap: 16px; background: white; padding: 18px 22px; border-radius: 16px; border: 1px solid rgba(232,56,122,0.1); transition: all 0.2s; }
+  .contact-item:hover { border-color: var(--pink); transform: translateX(4px); }
+  .contact-icon { width: 40px; height: 40px; border-radius: 10px; background: linear-gradient(135deg, var(--pink), var(--magenta)); display: flex; align-items: center; justify-content: center; font-size: 1.1rem; flex-shrink: 0; }
+  .contact-info-label { font-size: 0.7rem; color: var(--gray); letter-spacing: 1px; text-transform: uppercase; }
+  .contact-info-value { font-size: 0.9rem; font-weight: 500; color: var(--dark); }
+
+  footer { text-align: center; padding: 32px 48px; border-top: 1px solid rgba(232,56,122,0.1); font-size: 0.8rem; color: var(--gray); }
+  footer span { color: var(--pink); }
+
+  .scroll-hint { position: absolute; bottom: 32px; left: 50%; transform: translateX(-50%); font-size: 0.72rem; letter-spacing: 2px; text-transform: uppercase; color: var(--gray); display: flex; flex-direction: column; align-items: center; gap: 8px; }
+  .scroll-line { width: 1px; height: 40px; background: linear-gradient(to bottom, var(--pink), transparent); animation: scrollAnim 1.5s ease infinite; }
+  @keyframes scrollAnim { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+  @media (max-width: 760px) {
+    #hero { grid-template-columns: 1fr; padding: 100px 24px 60px; }
+    .hero-right { display: none; }
+    nav { padding: 16px 24px; }
+    .nav-links { gap: 16px; }
+    .nav-links a { font-size: 0.72rem; letter-spacing: 1px; }
+    section { padding: 60px 24px; }
+    .skills-grid, .contact-grid { grid-template-columns: 1fr; }
+    .section-num { font-size: 2.5rem; }
+    .section-title { font-size: 1.8rem; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo" onclick="showHero()">Lola.</div>
+  <div class="nav-links">
+    <a onclick="showSection('parcours')">Parcours</a>
+    <a onclick="showSection('experiences')">Expériences</a>
+    <a onclick="showSection('competences')">Compétences</a>
+    <a onclick="showSection('contact')">Contact</a>
+  </div>
+</nav>
+
+<div id="hero" style="display:grid; position:relative;">
+  <div class="hero-bg-shape"></div>
+  <div class="hero-bg-shape2"></div>
+  <div class="hero-left">
+    <div class="hero-tag">✦ Disponible en alternance — Sept. 2026</div>
+    <h1 class="hero-name">Lola<br><span>Avril</span></h1>
+    <p class="hero-title">Direction Artistique · Design Graphique · Communication</p>
+    <p class="hero-subtitle">Passionnée de création visuelle, je rejoins le Mastère Direction Artistique en Design Graphique à l'ECV Lille en septembre 2026. Je cherche une alternance de 2 ans dans un environnement créatif et inspirant.</p>
+    <div class="hero-cta">
+      <a class="btn-primary" onclick="showSection('experiences')">Voir mes expériences</a>
+      <a class="btn-secondary" onclick="showSection('contact')">Me contacter</a>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="hero-photo-wrapper">
+      <div class="hero-photo-bg"></div>
+      <div class="hero-photo-inner">
+        LA
+        <span class="deco-star s1">✦</span>
+        <span class="deco-star s2">✺</span>
+      </div>
+    </div>
+    <div class="traits-wrapper">
+      <div class="trait-pill"><span class="trait-dot"></span>Consciencieuse</div>
+      <div class="trait-pill"><span class="trait-dot"></span>Curieuse</div>
+      <div class="trait-pill"><span class="trait-dot"></span>Polyvalente</div>
+      <div class="trait-pill"><span class="trait-dot"></span>Passionnée de culture</div>
+    </div>
+  </div>
+  <div class="scroll-hint"><span>Explorer</span><div class="scroll-line"></div></div>
+</div>
+
+<section id="parcours">
+  <div class="section-header">
+    <div class="section-num">01</div>
+    <h2 class="section-title">Mon <span>parcours</span></h2>
+  </div>
+  <div class="timeline">
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="timeline-date">Actuellement</div>
+      <div class="timeline-degree">Bachelor Communication & Marketing</div>
+      <div class="timeline-school">ICOM Rennes, Rennes</div>
+      <div class="timeline-detail">Spécialité Création & Design de Marque</div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="timeline-date">Échange académique</div>
+      <div class="timeline-degree">Programme Cross-Cultural Communication</div>
+      <div class="timeline-school">Udayana University, Bali</div>
+      <div class="timeline-detail">Immersion culturelle et communication interculturelle</div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="timeline-date">2022</div>
+      <div class="timeline-degree">Licence Sciences de l'Éducation</div>
+      <div class="timeline-school">Université Rennes 2, Rennes</div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="timeline-date">2022</div>
+      <div class="timeline-degree">Baccalauréat — Mention Assez Bien</div>
+      <div class="timeline-detail">Spécialités SES & HGGSP</div>
+    </div>
+  </div>
+</section>
+
+<section id="experiences">
+  <div class="section-header">
+    <div class="section-num">02</div>
+    <h2 class="section-title">Mes <span>expériences</span></h2>
+  </div>
+  <div class="xp-grid">
+    <div class="xp-card">
+      <div class="xp-type">Stage · Community Management</div>
+      <div class="xp-date">Mai – Déc. 2025</div>
+      <div class="xp-role">Community Manager</div>
+      <div class="xp-company">Thomas Delafontaine, Coach Sportif</div>
+      <div class="xp-tasks">Création de visuels, développement de la stratégie réseaux sociaux</div>
+    </div>
+    <div class="xp-card">
+      <div class="xp-type">Stage · Communication</div>
+      <div class="xp-date">Déc. 2024 – Fév. 2025</div>
+      <div class="xp-role">Assistante de Communication</div>
+      <div class="xp-company">Roz Marine Thalasso, Perros-Guirec</div>
+      <div class="xp-tasks">Création de l'identité visuelle, charte graphique, stratégie réseaux sociaux de la première édition du festival de cinéma espoir « Les Étoiles de Perros »</div>
+    </div>
+    <div class="xp-card">
+      <div class="xp-type">Bénévolat</div>
+      <div class="xp-date">Éd. 2024 & 2025</div>
+      <div class="xp-role">Bénévole Buffet</div>
+      <div class="xp-company">Festival Mythos, Rennes</div>
+      <div class="xp-tasks">Animation et service lors du festival de musique</div>
+    </div>
+    <div class="xp-card">
+      <div class="xp-type">Stage · Communication</div>
+      <div class="xp-date">Janv. – Mars 2024</div>
+      <div class="xp-role">Assistante de Communication</div>
+      <div class="xp-company">Ville de Perros-Guirec</div>
+      <div class="xp-tasks">Création de contenus, visuels événementiels, rédaction d'articles, montage vidéo</div>
+    </div>
+    <div class="xp-card">
+      <div class="xp-type">Restauration</div>
+      <div class="xp-date">Avr. – Août 2023</div>
+      <div class="xp-role">Serveuse</div>
+      <div class="xp-company">Les Vieux Gréements, Perros-Guirec</div>
+      <div class="xp-tasks">Service à table, prise de commandes, gestion de caisse, conseil</div>
+    </div>
+  </div>
+</section>
+
+<section id="competences">
+  <div class="section-header">
+    <div class="section-num">03</div>
+    <h2 class="section-title">Mes <span>compétences</span></h2>
+  </div>
+  <div class="skills-grid">
+    <div class="skills-col">
+      <h3>Créativité & Stratégie</h3>
+      <div class="skill-bar-item">
+        <div class="skill-bar-label"><span>Réflexion stratégique</span></div>
+        <div class="skill-bar-track"><div class="skill-bar-fill" data-width="85%" style="width:0"></div></div>
+      </div>
+      <div class="skill-bar-item">
+        <div class="skill-bar-label"><span>Développement de concepts créatifs</span></div>
+        <div class="skill-bar-track"><div class="skill-bar-fill" data-width="90%" style="width:0"></div></div>
+      </div>
+      <div class="skill-bar-item">
+        <div class="skill-bar-label"><span>Gestion de projet</span></div>
+        <div class="skill-bar-track"><div class="skill-bar-fill" data-width="75%" style="width:0"></div></div>
+      </div>
+      <div class="skill-bar-item">
+        <div class="skill-bar-label"><span>Veille créative</span></div>
+        <div class="skill-bar-track"><div class="skill-bar-fill" data-width="95%" style="width:0"></div></div>
+      </div>
+      <div style="margin-top:32px;">
+        <h3 style="margin-bottom:16px;">Langues</h3>
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <div class="lang-badge">🇫🇷 Français <span class="lang-level">Langue maternelle</span></div>
+          <div class="lang-badge">🇬🇧 Anglais <span class="lang-level">B2 TOEIC</span></div>
+        </div>
+      </div>
+      <div style="margin-top:32px;">
+        <h3 style="margin-bottom:16px;">Formation complémentaire</h3>
+        <div class="tag-list">
+          <div class="tag">Formation Art Explora</div>
+          <div class="tag">Histoire de l'Art</div>
+        </div>
+      </div>
+    </div>
+    <div class="skills-col">
+      <h3>Logiciels & Outils</h3>
+      <div class="tag-list">
+        <div class="tag">✦ Illustrator</div>
+        <div class="tag">✦ InDesign</div>
+        <div class="tag">✦ Photoshop</div>
+        <div class="tag">✦ Figma</div>
+        <div class="tag">✦ CapCut</div>
+      </div>
+      <div style="margin-top:32px;">
+        <h3 style="margin-bottom:16px;">Points forts</h3>
+        <div class="tag-list">
+          <div class="tag">Passionnée de culture</div>
+          <div class="tag">Consciencieuse</div>
+          <div class="tag">Curieuse</div>
+          <div class="tag">Polyvalente</div>
+          <div class="tag">Identité visuelle</div>
+          <div class="tag">Réseaux sociaux</div>
+          <div class="tag">Montage vidéo</div>
+          <div class="tag">Direction artistique</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="contact">
+  <div class="section-header">
+    <div class="section-num">04</div>
+    <h2 class="section-title">Me <span>contacter</span></h2>
+  </div>
+  <div class="contact-grid">
+    <div>
+      <p class="contact-intro">Travaillons <span>ensemble</span> ✦</p>
+      <p class="contact-text">Je recherche une alternance à Lille et ses alentours, avec un rythme de 4 jours en entreprise et 1 jour à l'école, de préférence dans le secteur culturel, au sein d'une structure créative, inspirante et passionnée.</p>
+      <p class="contact-text" style="margin-top:16px;">J'ai envie d'apprendre, de collaborer et de mettre ma créativité au service de projets porteurs de sens.</p>
+    </div>
+    <div class="contact-items">
+      <div class="contact-item">
+        <div class="contact-icon">📍</div>
+        <div>
+          <div class="contact-info-label">Localisation</div>
+          <div class="contact-info-value">Lille & alentours</div>
+        </div>
+      </div>
+      <div class="contact-item">
+        <div class="contact-icon">🎓</div>
+        <div>
+          <div class="contact-info-label">Formation</div>
+          <div class="contact-info-value">Mastère DA Design Graphique — ECV Lille</div>
+        </div>
+      </div>
+      <div class="contact-item">
+        <div class="contact-icon">📅</div>
+        <div>
+          <div class="contact-info-label">Disponibilité</div>
+          <div class="contact-info-value">Septembre 2026 — 2 ans</div>
+        </div>
+      </div>
+      <div class="contact-item">
+        <div class="contact-icon">💼</div>
+        <div>
+          <div class="contact-info-label">LinkedIn</div>
+          <div class="contact-info-value">Lola Avril</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  Portfolio de <span>Lola Avril</span> — Direction Artistique & Design Graphique ✦ 2026
+</footer>
+
+<script>
+function showSection(id) {
+  document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
+  document.getElementById('hero').style.display = 'none';
+  const target = document.getElementById(id);
+  target.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  if (id === 'competences') {
+    setTimeout(() => {
+      target.querySelectorAll('.skill-bar-fill').forEach(bar => {
+        bar.style.width = bar.getAttribute('data-width');
+      });
+    }, 200);
+  }
+}
+
+function showHero() {
+  document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
+  document.getElementById('hero').style.display = 'grid';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+
+<!-- WISTIA VIDEO POPUP -->
+<style>
+.vid-fab {
+  position: fixed; bottom: 32px; right: 32px; z-index: 500;
+  display: flex; flex-direction: column; align-items: flex-end; gap: 12px;
+}
+.vid-fab-btn {
+  width: 60px; height: 60px; border-radius: 50%;
+  background: linear-gradient(135deg, #e8387a, #c4006a);
+  border: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 6px 24px rgba(232,56,122,0.45);
+  transition: transform 0.2s, box-shadow 0.2s;
+  position: relative;
+}
+.vid-fab-btn:hover { transform: scale(1.08); box-shadow: 0 10px 32px rgba(232,56,122,0.55); }
+.vid-fab-btn svg { width: 24px; height: 24px; fill: white; }
+.vid-fab-pulse {
+  position: absolute; inset: -4px; border-radius: 50%;
+  border: 2px solid rgba(232,56,122,0.5);
+  animation: fabPulse 2s ease infinite;
+}
+@keyframes fabPulse { 0%,100%{transform:scale(1);opacity:.6} 50%{transform:scale(1.2);opacity:0} }
+.vid-fab-label {
+  background: #1a1a1a; color: #fff;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.72rem; font-weight: 500; letter-spacing: 1px;
+  padding: 6px 14px; border-radius: 100px;
+  white-space: nowrap; pointer-events: none;
+  opacity: 0; transform: translateX(8px);
+  transition: opacity 0.2s, transform 0.2s;
+}
+.vid-fab:hover .vid-fab-label { opacity: 1; transform: translateX(0); }
+
+.vid-overlay {
+  display: none; position: fixed; inset: 0; z-index: 600;
+  background: rgba(0,0,0,0.75); backdrop-filter: blur(6px);
+  align-items: center; justify-content: center;
+}
+.vid-overlay.open { display: flex; animation: overlayIn 0.25s ease; }
+@keyframes overlayIn { from{opacity:0} to{opacity:1} }
+.vid-modal {
+  background: #111; border-radius: 16px; overflow: hidden;
+  width: min(860px, 92vw);
+  box-shadow: 0 32px 80px rgba(0,0,0,0.6);
+  position: relative; animation: modalIn 0.3s cubic-bezier(.4,0,.2,1);
+}
+@keyframes modalIn { from{transform:scale(0.92);opacity:0} to{transform:scale(1);opacity:1} }
+.vid-modal-header {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 16px 20px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+.vid-modal-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 0.95rem; color: #fff; font-weight: 700;
+}
+.vid-modal-title span { color: #e8387a; font-style: italic; }
+.vid-close {
+  width: 32px; height: 32px; border-radius: 50%; border: none;
+  background: rgba(255,255,255,0.1); color: #fff;
+  font-size: 1rem; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: background 0.2s;
+}
+.vid-close:hover { background: #e8387a; }
+.vid-body { padding: 20px; }
+</style>
+
+<div class="vid-fab">
+  <div class="vid-fab-label">Voir la vidéo ✦</div>
+  <button class="vid-fab-btn" onclick="openVid()">
+    <div class="vid-fab-pulse"></div>
+    <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+  </button>
+</div>
+
+<div class="vid-overlay" id="vidOverlay" onclick="closeVidOutside(event)">
+  <div class="vid-modal" id="vidModal">
+    <div class="vid-modal-header">
+      <div class="vid-modal-title">Lola <span>Avril</span> — En vidéo</div>
+      <button class="vid-close" onclick="closeVid()">✕</button>
+    </div>
+    <div class="vid-body">
+      <script src="https://fast.wistia.com/player.js" async></script>
+      <script src="https://fast.wistia.com/embed/gkbxd4dvys.js" async type="module"></script>
+      <style>wistia-player[media-id='gkbxd4dvys']:not(:defined){background:center/contain no-repeat url('https://fast.wistia.com/embed/medias/gkbxd4dvys/swatch');display:block;filter:blur(5px);padding-top:56.25%;}</style>
+      <wistia-player media-id="gkbxd4dvys" aspect="1.7777777777777777"></wistia-player>
+    </div>
+  </div>
+</div>
+
+<script>
+function openVid() { document.getElementById('vidOverlay').classList.add('open'); }
+function closeVid() { document.getElementById('vidOverlay').classList.remove('open'); }
+function closeVidOutside(e) { if(e.target===document.getElementById('vidOverlay')) closeVid(); }
+document.addEventListener('keydown', e => { if(e.key==='Escape') closeVid(); });
+</script>
+
+</body>
+</html>
