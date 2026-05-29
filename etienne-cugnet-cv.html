@@ -693,108 +693,108 @@ function animateBars() {
 
 
 
-<!-- VIDEO WIDGET BOTTOM RIGHT -->
+<!-- VIDEO WIDGET FIXED BOTTOM LEFT -->
 <style>
 .vid-widget {
-  position: fixed; bottom: 110px; right: 24px; z-index: 490;
-  width: 210px;
-  border-radius: 14px; overflow: hidden;
-  box-shadow: 0 8px 36px rgba(0,0,0,0.5);
+  position: fixed;
+  bottom: 24px;
+  left: 24px;
+  z-index: 9999;
+  width: 220px;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 8px 36px rgba(0,0,0,0.6);
   cursor: pointer;
   transition: transform 0.2s, box-shadow 0.2s;
-  border: 2px solid rgba(240,208,34,0.5);
-  background: #000;
+  border: 2.5px solid #f0d022;
+  background: #111;
 }
 .vid-widget:hover {
-  transform: scale(1.05) translateY(-3px);
-  box-shadow: 0 16px 48px rgba(0,0,0,0.65);
-  border-color: rgba(240,208,34,0.9);
+  transform: scale(1.04) translateY(-3px);
+  box-shadow: 0 16px 48px rgba(240,208,34,0.4);
 }
 .vid-thumb {
-  width: 100%; aspect-ratio: 16/9;
-  background: linear-gradient(135deg, #1a1a1a 0%, #2d1a25 100%);
-  display: flex; align-items: center; justify-content: center;
-  position: relative; overflow: hidden;
+  width: 100%;
+  aspect-ratio: 16/9;
+  background: #1a1a1a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
 }
-.vid-thumb-bg {
+.vid-thumb img {
   position: absolute; inset: 0;
-  background: center/cover no-repeat url("https://fast.wistia.com/embed/medias/gkbxd4dvys/swatch");
-  filter: brightness(0.6);
+  width: 100%; height: 100%;
+  object-fit: cover;
+  opacity: 0.7;
 }
 .vid-play-btn {
-  width: 44px; height: 44px; border-radius: 50%;
-  background: rgba(240,208,34,0.9);
-  display: flex; align-items: center; justify-content: center;
-  position: relative; z-index: 1;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.4);
-  transition: transform 0.2s, background 0.2s;
-}
-.vid-widget:hover .vid-play-btn {
-  transform: scale(1.12);
+  width: 48px; height: 48px;
+  border-radius: 50%;
   background: #f0d022;
+  display: flex; align-items: center; justify-content: center;
+  position: relative; z-index: 2;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+  flex-shrink: 0;
 }
-.vid-play-btn svg { width: 18px; height: 18px; fill: white; margin-left: 3px; }
-.vid-widget-label {
-  background: rgba(0,0,0,0.88);
-  color: #fff; font-size: 0.63rem; font-weight: 600;
+.vid-play-btn svg { width: 20px; height: 20px; fill: #1a2e1e; margin-left: 3px; }
+.vid-widget-bar {
+  background: #f0d022;
+  color: #1a2e1e;
+  font-family: sans-serif;
+  font-size: 0.68rem; font-weight: 700;
   letter-spacing: 1px; text-transform: uppercase;
   padding: 8px 12px; text-align: center;
 }
-.vid-widget-label span { color: #f0d022; }
 
-/* Full screen overlay */
+/* Plein ecran overlay */
 .vid-full-overlay {
-  display: none; position: fixed; inset: 0; z-index: 600;
-  background: rgba(0,0,0,0.88); backdrop-filter: blur(10px);
-  align-items: center; justify-content: center; padding: 20px;
+  display: none;
+  position: fixed; inset: 0; z-index: 10000;
+  background: rgba(0,0,0,0.9);
+  align-items: center; justify-content: center;
+  padding: 20px;
 }
-.vid-full-overlay.open { display: flex; animation: vidOverIn 0.25s ease; }
-@keyframes vidOverIn { from{opacity:0} to{opacity:1} }
+.vid-full-overlay.open { display: flex; }
 .vid-full-modal {
-  background: #111; border-radius: 18px; overflow: hidden;
+  background: #111; border-radius: 16px; overflow: hidden;
   width: min(900px, 96vw);
-  box-shadow: 0 40px 100px rgba(0,0,0,0.8);
-  animation: vidModIn 0.3s cubic-bezier(.4,0,.2,1);
+  box-shadow: 0 40px 100px rgba(0,0,0,0.9);
 }
-@keyframes vidModIn { from{transform:scale(0.9);opacity:0} to{transform:scale(1);opacity:1} }
 .vid-full-header {
   display: flex; justify-content: space-between; align-items: center;
-  padding: 16px 22px; border-bottom: 1px solid rgba(255,255,255,0.08);
-  background: #1a1a1a;
+  padding: 14px 20px; background: #1a1a1a;
 }
-.vid-full-title { font-size: 0.92rem; font-weight: 700; color: #fff; }
-.vid-full-title span { color: #f0d022; font-style: italic; }
+.vid-full-title { font-family: sans-serif; font-size: 0.9rem; font-weight: 700; color: #fff; }
 .vid-full-close {
   width: 34px; height: 34px; border-radius: 50%;
-  background: rgba(255,255,255,0.1); border: none; color: #fff;
+  background: #f0d022; border: none; color: #fff;
   font-size: 1.1rem; cursor: pointer;
   display: flex; align-items: center; justify-content: center;
-  transition: background 0.2s;
 }
-.vid-full-close:hover { background: #f0d022; }
-.vid-full-body { padding: 20px; }
+.vid-full-body { padding: 16px; }
 </style>
 
 <script src="https://fast.wistia.com/player.js" async></script>
 <script src="https://fast.wistia.com/embed/gkbxd4dvys.js" async type="module"></script>
-<style>wistia-player[media-id="gkbxd4dvys"]:not(:defined){background:center/contain no-repeat url("https://fast.wistia.com/embed/medias/gkbxd4dvys/swatch");display:block;filter:blur(5px);padding-top:56.25%;}</style>
 
-<!-- Mini vignette cliquable -->
+<!-- Vignette visible bas gauche -->
 <div class="vid-widget" onclick="openVidFull()">
   <div class="vid-thumb">
-    <div class="vid-thumb-bg"></div>
+    <img src="https://fast.wistia.com/embed/medias/gkbxd4dvys/swatch" alt="video preview" onerror="this.style.display='none'">
     <div class="vid-play-btn">
       <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
     </div>
   </div>
-  <div class="vid-widget-label">▶ <span>Voir</span> la présentation</div>
+  <div class="vid-widget-bar">▶ Voir la présentation</div>
 </div>
 
-<!-- Plein écran -->
-<div class="vid-full-overlay" id="vidFullOverlay" onclick="closeVidFullOutside(event)">
+<!-- Plein ecran -->
+<div class="vid-full-overlay" id="vidFullOverlay" onclick="if(event.target===this)closeVidFull()">
   <div class="vid-full-modal">
     <div class="vid-full-header">
-      <div class="vid-full-title">Présentation <span>vidéo</span></div>
+      <div class="vid-full-title">Présentation vidéo</div>
       <button class="vid-full-close" onclick="closeVidFull()">✕</button>
     </div>
     <div class="vid-full-body">
@@ -806,8 +806,7 @@ function animateBars() {
 <script>
 function openVidFull() { document.getElementById('vidFullOverlay').classList.add('open'); }
 function closeVidFull() { document.getElementById('vidFullOverlay').classList.remove('open'); }
-function closeVidFullOutside(e) { if(e.target===document.getElementById('vidFullOverlay')) closeVidFull(); }
-document.addEventListener('keydown', function(e) { if(e.key==='Escape') { closeVidFull(); } });
+document.addEventListener('keydown', function(e) { if(e.key==='Escape') closeVidFull(); });
 </script>
 
 
