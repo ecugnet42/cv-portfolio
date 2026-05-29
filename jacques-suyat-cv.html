@@ -1,0 +1,935 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jacques Suyat — Électronique & Systèmes Embarqués</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Barlow:ital,wght@0,300;0,400;0,600;0,700;0,900;1,300&family=Barlow+Condensed:wght@700;900&display=swap');
+
+:root {
+  --bg: #080e12;
+  --bg2: #0d1820;
+  --bg3: #112030;
+  --cyan: #00d4ff;
+  --cyan-dim: rgba(0,212,255,0.12);
+  --cyan-mid: rgba(0,212,255,0.35);
+  --steel: #2a4a6b;
+  --text: #c8dde8;
+  --gray: #5a7a8a;
+  --white: #f0f8ff;
+}
+
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+
+body {
+  font-family: 'Barlow', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  overflow-x: hidden;
+  cursor: none;
+}
+
+/* CURSOR */
+.cursor { width:10px; height:10px; background:var(--cyan); border-radius:50%; position:fixed; top:0; left:0; pointer-events:none; z-index:9999; transform:translate(-50%,-50%); transition:transform .1s; }
+.cursor-ring { width:32px; height:32px; border:1.5px solid var(--cyan); border-radius:50%; position:fixed; top:0; left:0; pointer-events:none; z-index:9998; transform:translate(-50%,-50%); transition:transform .15s ease; opacity:.5; }
+@media(max-width:768px){ .cursor,.cursor-ring{display:none;} body{cursor:auto;} }
+
+/* GRID BACKGROUND */
+body::before {
+  content:''; position:fixed; inset:0; z-index:0; pointer-events:none;
+  background-image:
+    linear-gradient(rgba(0,212,255,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,212,255,0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+/* NAV */
+nav {
+  position:fixed; top:0; left:0; right:0; z-index:100;
+  display:flex; justify-content:space-between; align-items:center;
+  padding:0 clamp(16px,4vw,56px);
+  height:60px;
+  background:rgba(8,14,18,0.92);
+  backdrop-filter:blur(16px);
+  border-bottom:1px solid rgba(0,212,255,0.15);
+}
+.nav-logo {
+  font-family:'Share Tech Mono',monospace;
+  font-size:clamp(0.85rem,2vw,1.1rem);
+  color:var(--cyan); letter-spacing:2px; cursor:pointer;
+}
+.nav-links { display:flex; gap:clamp(12px,3vw,32px); }
+.nav-links button {
+  background:none; border:none; cursor:pointer;
+  font-family:'Share Tech Mono',monospace;
+  font-size:clamp(0.6rem,1.5vw,0.72rem);
+  letter-spacing:2px; text-transform:uppercase; color:var(--gray);
+  transition:color .2s; padding:0;
+}
+.nav-links button:hover, .nav-links button.active { color:var(--cyan); }
+
+/* PAGES */
+.page { display:none; min-height:100vh; position:relative; z-index:1; }
+.page.active { display:block; animation:pageIn .4s ease; }
+@keyframes pageIn { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
+
+/* ===== HERO ===== */
+#hero {
+  min-height:100vh;
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  padding-top:60px;
+}
+.hero-left {
+  padding: clamp(40px,6vw,80px) clamp(20px,4vw,56px);
+  display:flex; flex-direction:column; justify-content:center;
+  position:relative; overflow:hidden;
+}
+.hero-left::before {
+  content:''; position:absolute; bottom:-100px; left:-100px;
+  width:400px; height:400px;
+  background:radial-gradient(circle, rgba(0,212,255,0.06) 0%, transparent 70%);
+  border-radius:50%; pointer-events:none;
+}
+.hero-status {
+  display:flex; align-items:center; gap:10px; margin-bottom:clamp(20px,4vw,36px);
+}
+.hero-status-dot {
+  width:8px; height:8px; border-radius:50%; background:var(--cyan);
+  box-shadow:0 0 8px var(--cyan);
+  animation:blink 2s ease infinite;
+}
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:.3} }
+.hero-status-text {
+  font-family:'Share Tech Mono',monospace;
+  font-size:clamp(0.62rem,1.5vw,0.72rem);
+  color:var(--cyan); letter-spacing:3px; text-transform:uppercase;
+}
+.hero-name {
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:clamp(3rem,8vw,7rem);
+  font-weight:900; line-height:.88; letter-spacing:-1px;
+  color:var(--white);
+}
+.hero-name .accent { color:var(--cyan); display:block; }
+.hero-domain {
+  margin-top:clamp(16px,3vw,24px);
+  font-family:'Share Tech Mono',monospace;
+  font-size:clamp(0.7rem,1.8vw,0.9rem);
+  color:var(--gray); letter-spacing:1px;
+  line-height:1.6;
+}
+.hero-domain span { color:var(--cyan); }
+.hero-bio {
+  margin-top:clamp(16px,3vw,28px);
+  font-size:clamp(0.82rem,2vw,0.92rem);
+  color:rgba(200,221,232,0.7);
+  line-height:1.75; max-width:440px;
+}
+.hero-contact {
+  margin-top:clamp(24px,4vw,40px);
+  display:flex; flex-direction:column; gap:8px;
+}
+.hero-contact-item {
+  display:flex; align-items:center; gap:10px;
+  font-family:'Share Tech Mono',monospace;
+  font-size:clamp(0.65rem,1.5vw,0.75rem);
+  color:var(--gray);
+}
+.hero-contact-item span { color:var(--cyan); margin-right:4px; }
+.hero-ctas {
+  margin-top:clamp(24px,4vw,40px);
+  display:flex; gap:12px; flex-wrap:wrap;
+}
+.btn-cyan {
+  background:var(--cyan); color:var(--bg);
+  border:none; padding:clamp(10px,2vw,14px) clamp(18px,3vw,28px);
+  border-radius:4px; font-family:'Barlow',sans-serif;
+  font-size:clamp(0.75rem,1.8vw,0.85rem); font-weight:700;
+  letter-spacing:1px; text-transform:uppercase;
+  cursor:pointer; transition:transform .2s, box-shadow .2s;
+}
+.btn-cyan:hover { transform:translateY(-2px); box-shadow:0 8px 28px rgba(0,212,255,0.4); }
+.btn-outline {
+  background:transparent; color:var(--cyan);
+  border:1.5px solid rgba(0,212,255,0.4);
+  padding:clamp(9px,2vw,13px) clamp(16px,3vw,26px);
+  border-radius:4px; font-family:'Barlow',sans-serif;
+  font-size:clamp(0.75rem,1.8vw,0.85rem); font-weight:600;
+  letter-spacing:1px; text-transform:uppercase;
+  cursor:pointer; transition:all .2s;
+}
+.btn-outline:hover { border-color:var(--cyan); background:var(--cyan-dim); }
+
+.hero-right {
+  background:var(--bg2);
+  border-left:1px solid rgba(0,212,255,0.1);
+  display:flex; flex-direction:column;
+  padding-top:60px;
+}
+.hero-photo-area {
+  flex:1; display:flex; align-items:flex-end; justify-content:center;
+  padding-bottom:0; position:relative; overflow:hidden; min-height:300px;
+}
+.hero-photo-frame {
+  width:clamp(160px,20vw,220px); height:clamp(200px,26vw,280px);
+  position:relative;
+}
+.hero-photo-border {
+  position:absolute; inset:0;
+  border:2px solid rgba(0,212,255,0.3);
+  border-radius:4px;
+}
+.hero-photo-corner {
+  position:absolute; width:16px; height:16px;
+  border-color:var(--cyan); border-style:solid;
+}
+.hero-photo-corner.tl { top:-2px; left:-2px; border-width:2px 0 0 2px; }
+.hero-photo-corner.tr { top:-2px; right:-2px; border-width:2px 2px 0 0; }
+.hero-photo-corner.bl { bottom:-2px; left:-2px; border-width:0 0 2px 2px; }
+.hero-photo-corner.br { bottom:-2px; right:-2px; border-width:0 2px 2px 0; }
+.hero-photo-inner {
+  position:absolute; inset:8px;
+  background:linear-gradient(160deg, #1a3040 0%, #0d1820 100%);
+  border-radius:2px; overflow:hidden;
+  display:flex; align-items:center; justify-content:center;
+}
+.hero-photo-inner img {
+  width:100%; height:100%; object-fit:cover; object-position:top;
+  filter:grayscale(20%) contrast(1.05);
+}
+.hero-photo-inner .initials {
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:3rem; font-weight:900; color:rgba(0,212,255,0.2);
+  letter-spacing:2px;
+}
+.scan-line {
+  position:absolute; left:0; right:0; height:2px;
+  background:linear-gradient(90deg, transparent, var(--cyan), transparent);
+  opacity:.4; animation:scan 3s linear infinite;
+}
+@keyframes scan { 0%{top:0%} 100%{top:100%} }
+
+.hero-stats {
+  display:grid; grid-template-columns:1fr 1fr;
+  border-top:1px solid rgba(0,212,255,0.1);
+}
+.hero-stat {
+  padding:clamp(16px,2vw,24px) clamp(16px,2vw,28px);
+  border-right:1px solid rgba(0,212,255,0.1);
+  border-bottom:1px solid rgba(0,212,255,0.1);
+  transition:background .2s;
+}
+.hero-stat:hover { background:var(--cyan-dim); }
+.hero-stat-val {
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:clamp(1.3rem,3vw,2rem); color:var(--cyan);
+  font-weight:900; letter-spacing:1px; line-height:1;
+}
+.hero-stat-label {
+  font-family:'Share Tech Mono',monospace;
+  font-size:clamp(0.55rem,1.2vw,0.62rem);
+  color:var(--gray); letter-spacing:1.5px;
+  text-transform:uppercase; margin-top:4px;
+}
+
+/* ===== SHARED PAGE ===== */
+.page-inner {
+  max-width:1100px; margin:0 auto;
+  padding: clamp(80px,10vw,120px) clamp(20px,5vw,56px) clamp(60px,8vw,80px);
+}
+.page-header {
+  display:flex; align-items:flex-end; gap:16px;
+  margin-bottom:clamp(40px,6vw,64px);
+  padding-bottom:20px;
+  border-bottom:1px solid rgba(0,212,255,0.12);
+}
+.page-num {
+  font-family:'Share Tech Mono',monospace;
+  font-size:clamp(2rem,5vw,4rem); color:rgba(0,212,255,0.08);
+  line-height:1; flex-shrink:0;
+}
+.page-title {
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:clamp(1.8rem,4vw,3rem); font-weight:900;
+  letter-spacing:2px; text-transform:uppercase;
+  color:var(--white); line-height:1;
+}
+.page-title span { color:var(--cyan); }
+
+/* FORMATION */
+.form-grid { display:grid; grid-template-columns:1fr 1fr; gap:24px; }
+.form-card {
+  background:var(--bg2); border:1px solid rgba(0,212,255,0.1);
+  border-radius:8px; padding:clamp(20px,3vw,28px);
+  position:relative; overflow:hidden; transition:all .2s;
+}
+.form-card::before {
+  content:''; position:absolute; top:0; left:0; right:0; height:2px;
+  background:linear-gradient(90deg, var(--cyan), transparent);
+  transform:scaleX(0); transform-origin:left; transition:transform .3s;
+}
+.form-card:hover::before { transform:scaleX(1); }
+.form-card:hover { border-color:rgba(0,212,255,0.3); transform:translateY(-2px); }
+.form-year {
+  font-family:'Share Tech Mono',monospace;
+  font-size:clamp(0.62rem,1.5vw,0.7rem); color:var(--cyan);
+  letter-spacing:2px; text-transform:uppercase; margin-bottom:10px;
+}
+.form-degree {
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:clamp(1rem,2.5vw,1.3rem); font-weight:700;
+  color:var(--white); letter-spacing:1px; line-height:1.2; margin-bottom:8px;
+}
+.form-school { font-size:clamp(0.78rem,1.8vw,0.88rem); color:var(--gray); }
+.form-mention {
+  margin-top:10px; display:inline-block;
+  background:var(--cyan-dim); border:1px solid rgba(0,212,255,0.25);
+  padding:3px 10px; border-radius:3px;
+  font-family:'Share Tech Mono',monospace;
+  font-size:clamp(0.58rem,1.2vw,0.65rem); color:var(--cyan); letter-spacing:1px;
+}
+
+/* SKILLS */
+.skills-grid { display:grid; grid-template-columns:1fr 1fr; gap:clamp(24px,4vw,48px); }
+.skills-section-label {
+  font-family:'Share Tech Mono',monospace;
+  font-size:clamp(0.62rem,1.5vw,0.7rem); color:var(--cyan);
+  letter-spacing:3px; text-transform:uppercase; margin-bottom:clamp(16px,3vw,24px);
+  display:flex; align-items:center; gap:8px;
+}
+.skills-section-label::after { content:''; flex:1; height:1px; background:rgba(0,212,255,0.15); }
+.skill-item { margin-bottom:clamp(12px,2vw,18px); }
+.skill-top {
+  display:flex; justify-content:space-between; align-items:center;
+  font-size:clamp(0.78rem,1.8vw,0.85rem); font-weight:600; color:var(--text);
+  margin-bottom:6px;
+}
+.skill-pct {
+  font-family:'Share Tech Mono',monospace;
+  font-size:clamp(0.62rem,1.2vw,0.7rem); color:var(--cyan);
+}
+.skill-track {
+  height:3px; background:rgba(0,212,255,0.08); border-radius:2px; overflow:hidden;
+}
+.skill-fill {
+  height:100%; border-radius:2px;
+  background:linear-gradient(90deg, var(--cyan), #0099bb);
+  width:0; transition:width 1.2s cubic-bezier(.4,0,.2,1);
+}
+.tag-grid { display:flex; flex-wrap:wrap; gap:8px; margin-top:8px; }
+.tag {
+  background:var(--bg3); border:1px solid rgba(0,212,255,0.2);
+  padding:clamp(5px,1vw,7px) clamp(10px,2vw,14px); border-radius:3px;
+  font-family:'Share Tech Mono',monospace;
+  font-size:clamp(0.6rem,1.3vw,0.7rem); color:var(--text);
+  transition:all .2s;
+}
+.tag:hover { border-color:var(--cyan); color:var(--cyan); background:var(--cyan-dim); }
+
+/* EXPERIENCES */
+.xp-list { display:flex; flex-direction:column; gap:3px; }
+.xp-item {
+  background:var(--bg2); border:1px solid rgba(0,212,255,0.08);
+  border-radius:6px; overflow:hidden; transition:border-color .2s;
+}
+.xp-item:hover { border-color:rgba(0,212,255,0.25); }
+.xp-header {
+  display:grid; grid-template-columns:1fr auto;
+  align-items:center; gap:16px; padding:clamp(16px,2.5vw,24px) clamp(16px,3vw,28px);
+  cursor:pointer; transition:background .2s;
+}
+.xp-item.open .xp-header { background:var(--cyan-dim); }
+.xp-date {
+  font-family:'Share Tech Mono',monospace;
+  font-size:clamp(0.6rem,1.3vw,0.68rem); color:var(--cyan);
+  letter-spacing:2px; text-transform:uppercase; margin-bottom:6px;
+}
+.xp-role {
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:clamp(1rem,2.5vw,1.4rem); font-weight:700;
+  color:var(--white); letter-spacing:1px; line-height:1;
+}
+.xp-company { font-size:clamp(0.75rem,1.8vw,0.82rem); color:var(--gray); margin-top:4px; }
+.xp-toggle {
+  width:32px; height:32px; border-radius:4px;
+  border:1.5px solid rgba(0,212,255,0.3);
+  display:flex; align-items:center; justify-content:center;
+  color:var(--cyan); font-size:1.1rem; flex-shrink:0; transition:all .3s;
+}
+.xp-item.open .xp-toggle { background:var(--cyan); color:var(--bg); transform:rotate(45deg); }
+.xp-body { max-height:0; overflow:hidden; transition:max-height .4s cubic-bezier(.4,0,.2,1); }
+.xp-item.open .xp-body { max-height:300px; }
+.xp-desc {
+  padding:0 clamp(16px,3vw,28px) clamp(16px,2.5vw,24px);
+  border-top:1px solid rgba(0,212,255,0.08); padding-top:16px;
+}
+.xp-desc ul { list-style:none; display:flex; flex-direction:column; gap:6px; }
+.xp-desc li {
+  font-size:clamp(0.78rem,1.8vw,0.85rem); color:rgba(200,221,232,0.7);
+  line-height:1.6; padding-left:16px; position:relative;
+}
+.xp-desc li::before { content:'▸'; position:absolute; left:0; color:var(--cyan); font-size:0.7rem; top:2px; }
+
+/* CONTACT */
+.contact-grid { display:grid; grid-template-columns:1fr 1fr; gap:clamp(32px,5vw,64px); align-items:start; }
+.contact-big {
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:clamp(2rem,5vw,4rem); font-weight:900;
+  color:var(--white); letter-spacing:2px; line-height:.95;
+  text-transform:uppercase; margin-bottom:20px;
+}
+.contact-big span { color:var(--cyan); display:block; }
+.contact-sub { font-size:clamp(0.8rem,1.8vw,0.9rem); color:var(--gray); line-height:1.7; }
+.contact-items { display:flex; flex-direction:column; gap:12px; }
+.contact-card {
+  background:var(--bg2); border:1px solid rgba(0,212,255,0.1);
+  border-radius:8px; padding:clamp(14px,2vw,18px) clamp(16px,2.5vw,22px);
+  display:flex; align-items:center; gap:14px; transition:all .2s;
+}
+.contact-card:hover { border-color:rgba(0,212,255,0.35); transform:translateX(4px); }
+.contact-icon {
+  width:38px; height:38px; border-radius:6px; flex-shrink:0;
+  background:var(--cyan-dim); border:1px solid rgba(0,212,255,0.2);
+  display:flex; align-items:center; justify-content:center; font-size:1rem;
+}
+.contact-lbl {
+  font-family:'Share Tech Mono',monospace;
+  font-size:clamp(0.58rem,1.2vw,0.65rem); color:var(--gray);
+  letter-spacing:1px; text-transform:uppercase;
+}
+.contact-val { font-size:clamp(0.8rem,1.8vw,0.9rem); font-weight:600; color:var(--white); margin-top:2px; }
+.lang-grid { display:flex; gap:12px; flex-wrap:wrap; margin-top:24px; }
+.lang-pill {
+  background:var(--bg3); border:1px solid rgba(0,212,255,0.2);
+  padding:8px 16px; border-radius:4px;
+  font-family:'Share Tech Mono',monospace;
+  font-size:clamp(0.62rem,1.5vw,0.72rem); color:var(--text);
+  display:flex; align-items:center; gap:8px;
+}
+.lang-level { color:var(--cyan); }
+
+/* FOOTER */
+footer {
+  border-top:1px solid rgba(0,212,255,0.1); padding:clamp(16px,3vw,24px) clamp(20px,4vw,56px);
+  display:flex; justify-content:space-between; align-items:center;
+  flex-wrap:wrap; gap:8px; position:relative; z-index:1;
+}
+.footer-id {
+  font-family:'Share Tech Mono',monospace;
+  font-size:clamp(0.6rem,1.3vw,0.72rem); color:var(--gray); letter-spacing:2px;
+}
+.footer-id span { color:var(--cyan); }
+
+/* ===== RESPONSIVE ===== */
+@media(max-width:900px) {
+  #hero { grid-template-columns:1fr; }
+  .hero-right { display:none; }
+  .hero-left { min-height:calc(100vh - 60px); padding-top:clamp(30px,6vw,60px); }
+  .form-grid { grid-template-columns:1fr; }
+  .skills-grid { grid-template-columns:1fr; }
+  .contact-grid { grid-template-columns:1fr; }
+}
+@media(max-width:600px) {
+  .nav-links { gap:10px; }
+  .nav-links button { font-size:0.58rem; letter-spacing:1px; }
+  .hero-ctas { flex-direction:column; }
+  .btn-cyan, .btn-outline { text-align:center; }
+  footer { flex-direction:column; text-align:center; }
+}
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<nav>
+  <div class="nav-logo" onclick="showPage('hero')">&gt; JS_PORTFOLIO</div>
+  <div class="nav-links">
+    <button onclick="showPage('hero')" id="nav-hero" class="active">Accueil</button>
+    <button onclick="showPage('formation')" id="nav-formation">Formation</button>
+    <button onclick="showPage('competences')" id="nav-competences">Skills</button>
+    <button onclick="showPage('experiences')" id="nav-experiences">Expériences</button>
+    <button onclick="showPage('contact')" id="nav-contact">Contact</button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div id="hero" class="page active" style="display:grid">
+  <div class="hero-left">
+    <div class="hero-status">
+      <div class="hero-status-dot"></div>
+      <div class="hero-status-text">Disponible · Alternance 2024-2026</div>
+    </div>
+    <h1 class="hero-name">
+      Jacques
+      <span class="accent">Suyat</span>
+    </h1>
+    <div class="hero-domain">
+      BUT GEII — 2ème année<br>
+      <span>Électronique</span> & <span>Systèmes Embarqués</span>
+    </div>
+    <p class="hero-bio">
+      Passionné par l'électronique et les systèmes embarqués. Actuellement en stage sur un système de détection de drones par vision par ordinateur. Je souhaite développer mes compétences en programmation (Python, C) et en conception électronique.
+    </p>
+    <div class="hero-contact">
+      <div class="hero-contact-item"><span>//</span> 22 Rue Châteauneuf, Nice</div>
+      <div class="hero-contact-item"><span>//</span> 06 36 19 69 34</div>
+      <div class="hero-contact-item"><span>//</span> jacquessuyat3@gmail.com</div>
+    </div>
+    <div class="hero-ctas">
+      <button class="btn-cyan" onclick="showPage('competences')">Voir mes skills</button>
+      <button class="btn-outline" onclick="showPage('contact')">Me contacter</button>
+    </div>
+  </div>
+
+  <div class="hero-right">
+    <div class="hero-photo-area">
+      <div class="scan-line"></div>
+      <div class="hero-photo-frame">
+        <div class="hero-photo-border"></div>
+        <div class="hero-photo-corner tl"></div>
+        <div class="hero-photo-corner tr"></div>
+        <div class="hero-photo-corner bl"></div>
+        <div class="hero-photo-corner br"></div>
+        <div class="hero-photo-inner">
+          <span class="initials">JS</span>
+        </div>
+      </div>
+    </div>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <div class="hero-stat-val">BUT</div>
+        <div class="hero-stat-label">GEII · Nice</div>
+      </div>
+      <div class="hero-stat" style="border-right:none">
+        <div class="hero-stat-val">2026</div>
+        <div class="hero-stat-label">Fin d'études</div>
+      </div>
+      <div class="hero-stat" style="border-bottom:none">
+        <div class="hero-stat-val">Python</div>
+        <div class="hero-stat-label">Langage principal</div>
+      </div>
+      <div class="hero-stat" style="border-right:none;border-bottom:none">
+        <div class="hero-stat-val">i3S</div>
+        <div class="hero-stat-label">Stage labo</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FORMATION -->
+<div id="formation" class="page">
+  <div class="page-inner">
+    <div class="page-header">
+      <div class="page-num">01</div>
+      <h2 class="page-title">Forma<span>tion</span></h2>
+    </div>
+    <div class="form-grid">
+      <div class="form-card">
+        <div class="form-year">2024 — 2026</div>
+        <div class="form-degree">BUT Génie Électrique et Informatique Industrielle</div>
+        <div class="form-school">IUT Nice Côte d'Azur, Nice</div>
+        <div class="form-mention">2ème année en cours</div>
+      </div>
+      <div class="form-card">
+        <div class="form-year">2023 — 2024</div>
+        <div class="form-degree">Baccalauréat Général</div>
+        <div class="form-school">Lycée Honoré d'Estienne D'orves, Nice<br>Spé Maths-NSI · Option Maths Expertes</div>
+        <div class="form-mention">Mention Bien</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- COMPETENCES -->
+<div id="competences" class="page">
+  <div class="page-inner">
+    <div class="page-header">
+      <div class="page-num">02</div>
+      <h2 class="page-title">Tech <span>Skills</span></h2>
+    </div>
+    <div class="skills-grid">
+      <div>
+        <div class="skills-section-label">Électronique</div>
+        <div class="skill-item">
+          <div class="skill-top"><span>Conception & gravure PCB</span><span class="skill-pct">85%</span></div>
+          <div class="skill-track"><div class="skill-fill" data-w="85%"></div></div>
+        </div>
+        <div class="skill-item">
+          <div class="skill-top"><span>Microcontrôleurs (Mbed)</span><span class="skill-pct">80%</span></div>
+          <div class="skill-track"><div class="skill-fill" data-w="80%"></div></div>
+        </div>
+        <div class="skill-item">
+          <div class="skill-top"><span>DesignSpark / PCB Design</span><span class="skill-pct">75%</span></div>
+          <div class="skill-track"><div class="skill-fill" data-w="75%"></div></div>
+        </div>
+        <div class="skill-item">
+          <div class="skill-top"><span>Appareils de mesure</span><span class="skill-pct">90%</span></div>
+          <div class="skill-track"><div class="skill-fill" data-w="90%"></div></div>
+        </div>
+        <div style="margin-top:clamp(24px,4vw,36px)">
+          <div class="skills-section-label">Outils & Matériel</div>
+          <div class="tag-grid">
+            <div class="tag">Oscilloscope</div>
+            <div class="tag">Graveuse laser</div>
+            <div class="tag">Poste à souder</div>
+            <div class="tag">Ampèremètre</div>
+            <div class="tag">Voltmètre</div>
+            <div class="tag">Générateurs signaux</div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="skills-section-label">Informatique</div>
+        <div class="skill-item">
+          <div class="skill-top"><span>Python</span><span class="skill-pct">85%</span></div>
+          <div class="skill-track"><div class="skill-fill" data-w="85%"></div></div>
+        </div>
+        <div class="skill-item">
+          <div class="skill-top"><span>Langage C</span><span class="skill-pct">75%</span></div>
+          <div class="skill-track"><div class="skill-fill" data-w="75%"></div></div>
+        </div>
+        <div class="skill-item">
+          <div class="skill-top"><span>Vision par ordinateur</span><span class="skill-pct">70%</span></div>
+          <div class="skill-track"><div class="skill-fill" data-w="70%"></div></div>
+        </div>
+        <div class="skill-item">
+          <div class="skill-top"><span>Traitement asynchrone données</span><span class="skill-pct">65%</span></div>
+          <div class="skill-track"><div class="skill-fill" data-w="65%"></div></div>
+        </div>
+        <div style="margin-top:clamp(24px,4vw,36px)">
+          <div class="skills-section-label">Domaines</div>
+          <div class="tag-grid">
+            <div class="tag">Détection de drones</div>
+            <div class="tag">Estimation de pose</div>
+            <div class="tag">Caméras événementielles</div>
+            <div class="tag">Robot mobile autonome</div>
+            <div class="tag">Machines à états</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- EXPERIENCES -->
+<div id="experiences" class="page">
+  <div class="page-inner">
+    <div class="page-header">
+      <div class="page-num">03</div>
+      <h2 class="page-title">Expé<span>riences</span></h2>
+    </div>
+    <div class="xp-list">
+
+      <div class="xp-item">
+        <div class="xp-header" onclick="toggleXp(this)">
+          <div>
+            <div class="xp-date">2026 · 2 mois</div>
+            <div class="xp-role">Stagiaire Recherche</div>
+            <div class="xp-company">Laboratoire i3S — Sophia Antipolis</div>
+          </div>
+          <div class="xp-toggle">+</div>
+        </div>
+        <div class="xp-body">
+          <div class="xp-desc">
+            <ul>
+              <li>Détection d'un drone par vision par ordinateur</li>
+              <li>Calibration de la caméra événementielle</li>
+              <li>Estimation de la pose en temps réel (position et orientation)</li>
+              <li>Exploitation et traitement asynchrone de données issues de caméras événementielles</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="xp-item">
+        <div class="xp-header" onclick="toggleXp(this)">
+          <div>
+            <div class="xp-date">Juin — Août 2025</div>
+            <div class="xp-role">Employé Polyvalent</div>
+            <div class="xp-company">Pokawa — Nice</div>
+          </div>
+          <div class="xp-toggle">+</div>
+        </div>
+        <div class="xp-body">
+          <div class="xp-desc">
+            <ul>
+              <li>Préparation de Poke bowls</li>
+              <li>Gestion des stocks</li>
+              <li>Vérification de la qualité des produits</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="xp-item">
+        <div class="xp-header" onclick="toggleXp(this)">
+          <div>
+            <div class="xp-date">Juillet — Août 2024</div>
+            <div class="xp-role">Serveur</div>
+            <div class="xp-company">Saint-Amour — Nice</div>
+          </div>
+          <div class="xp-toggle">+</div>
+        </div>
+        <div class="xp-body">
+          <div class="xp-desc">
+            <ul>
+              <li>Travail d'équipe en environnement dynamique</li>
+              <li>Accueil et écoute des clients</li>
+              <li>Gestion du temps et des priorités</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- CONTACT -->
+<div id="contact" class="page">
+  <div class="page-inner">
+    <div class="page-header">
+      <div class="page-num">04</div>
+      <h2 class="page-title">Con<span>tact</span></h2>
+    </div>
+    <div class="contact-grid">
+      <div>
+        <div class="contact-big">Recrutons<br><span>ensemble</span></div>
+        <p class="contact-sub">En recherche d'alternance dans le domaine de l'électronique et des systèmes embarqués pour 2024-2026. Motivé, rigoureux et passionné par les technologies de pointe.</p>
+        <div class="lang-grid">
+          <div class="lang-pill">🇫🇷 Français <span class="lang-level">· Natif</span></div>
+          <div class="lang-pill">🇬🇧 Anglais <span class="lang-level">· B1/B2</span></div>
+        </div>
+      </div>
+      <div class="contact-items">
+        <div class="contact-card">
+          <div class="contact-icon">📍</div>
+          <div>
+            <div class="contact-lbl">Adresse</div>
+            <div class="contact-val">22 Rue Châteauneuf, Nice</div>
+          </div>
+        </div>
+        <div class="contact-card">
+          <div class="contact-icon">📱</div>
+          <div>
+            <div class="contact-lbl">Téléphone</div>
+            <div class="contact-val">06 36 19 69 34</div>
+          </div>
+        </div>
+        <div class="contact-card">
+          <div class="contact-icon">✉️</div>
+          <div>
+            <div class="contact-lbl">Email</div>
+            <div class="contact-val">jacquessuyat3@gmail.com</div>
+          </div>
+        </div>
+        <div class="contact-card">
+          <div class="contact-icon">🎓</div>
+          <div>
+            <div class="contact-lbl">Formation</div>
+            <div class="contact-val">BUT GEII · IUT Nice Côte d'Azur</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-id">&gt; <span>JACQUES_SUYAT</span> · GEII · NICE · 2026</div>
+  <div class="footer-id">Fait avec <span>Claude</span> ✦ MarketForge</div>
+</footer>
+
+<!-- VIDEO WIDGET FIXED BOTTOM LEFT -->
+<style>
+@keyframes vidFloat { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+@keyframes vidGlow { 0%,100%{box-shadow:0 8px 36px rgba(220,30,30,0.6),0 0 0 3px rgba(220,30,30,0.3)} 50%{box-shadow:0 16px 52px rgba(220,30,30,0.9),0 0 0 6px rgba(220,30,30,0.1)} }
+.vid-widget { position:fixed; bottom:28px; left:24px; z-index:9999; width:clamp(160px,22vw,220px); border-radius:12px; overflow:hidden; cursor:pointer; border:3px solid #dc1e1e; background:#111; animation:vidFloat 3s ease-in-out infinite, vidGlow 3s ease-in-out infinite; }
+.vid-widget:hover { animation:none; transform:scale(1.06) translateY(-4px); box-shadow:0 20px 60px rgba(220,30,30,0.8); }
+.vid-thumb { width:100%; aspect-ratio:16/9; background:#1a1a1a; display:flex; align-items:center; justify-content:center; position:relative; overflow:hidden; }
+.vid-thumb img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; opacity:.65; }
+.vid-play-btn { width:48px; height:48px; border-radius:50%; background:#dc1e1e; display:flex; align-items:center; justify-content:center; position:relative; z-index:2; box-shadow:0 4px 24px rgba(0,0,0,.6); }
+.vid-play-btn svg { width:20px; height:20px; fill:white; margin-left:4px; }
+.vid-widget-bar { background:#dc1e1e; color:#fff; font-family:sans-serif; font-size:clamp(0.65rem,1.8vw,0.78rem); font-weight:800; padding:8px 12px; text-align:center; }
+.vid-full-overlay { display:none; position:fixed; inset:0; z-index:10000; background:rgba(0,0,0,.9); align-items:center; justify-content:center; padding:20px; }
+.vid-full-overlay.open { display:flex; }
+.vid-full-modal { background:#111; border-radius:16px; overflow:hidden; width:min(900px,96vw); box-shadow:0 40px 100px rgba(0,0,0,.9); }
+.vid-full-header { display:flex; justify-content:space-between; align-items:center; padding:14px 20px; background:#1a1a1a; }
+.vid-full-title { font-family:sans-serif; font-size:0.9rem; font-weight:700; color:#fff; }
+.vid-full-close { width:34px; height:34px; border-radius:50%; background:#dc1e1e; border:none; color:#fff; font-size:1.1rem; cursor:pointer; display:flex; align-items:center; justify-content:center; }
+.vid-full-body { padding:16px; }
+</style>
+<script src="https://fast.wistia.com/player.js" async></script>
+<script src="https://fast.wistia.com/embed/gkbxd4dvys.js" async type="module"></script>
+<div class="vid-widget" onclick="openVidFull()">
+  <div class="vid-thumb">
+    <img src="https://fast.wistia.com/embed/medias/gkbxd4dvys/swatch" alt="video" onerror="this.style.display='none'">
+    <div class="vid-play-btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
+  </div>
+  <div class="vid-widget-bar">📩 J'ai un message pour toi !</div>
+</div>
+<div class="vid-full-overlay" id="vidFullOverlay" onclick="if(event.target===this)closeVidFull()">
+  <div class="vid-full-modal">
+    <div class="vid-full-header">
+      <div class="vid-full-title">📩 Mon message pour toi</div>
+      <button class="vid-full-close" onclick="closeVidFull()">✕</button>
+    </div>
+    <div class="vid-full-body">
+      <wistia-player media-id="gkbxd4dvys" aspect="1.7777777777777777"></wistia-player>
+    </div>
+  </div>
+</div>
+
+<!-- STRIPE SALES BANNER TOP -->
+<style>
+.sales-banner { position:fixed; top:0; left:0; right:0; z-index:9998; background:#0f2027; border-bottom:3px solid #c9a84c; box-shadow:0 4px 28px rgba(0,0,0,.35); display:none; }
+.sales-banner-inner { display:flex; align-items:center; justify-content:space-between; padding:0 clamp(16px,4vw,40px); height:64px; max-width:1400px; margin:0 auto; }
+.sales-banner-left { display:flex; align-items:center; gap:10px; }
+.sales-banner-dot { width:8px; height:8px; border-radius:50%; background:#c9a84c; animation:dotPulse 2s ease infinite; }
+@keyframes dotPulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.4;transform:scale(1.4)} }
+.sales-banner-tagline { font-family:sans-serif; font-size:clamp(0.72rem,1.8vw,0.82rem); font-weight:600; color:rgba(255,255,255,.75); }
+.sales-banner-tagline span { color:#c9a84c; }
+.sales-banner-btn { background:#c9a84c; color:#0f2027; border:none; padding:clamp(8px,1.5vw,11px) clamp(16px,2.5vw,28px); border-radius:8px; font-family:sans-serif; font-size:clamp(0.72rem,1.8vw,0.82rem); font-weight:800; letter-spacing:.5px; cursor:pointer; transition:all .2s; white-space:nowrap; }
+.sales-banner-btn:hover { background:#e0b84e; transform:translateY(-1px); box-shadow:0 5px 22px rgba(201,168,76,.55); }
+.sales-banner-mobile { display:none; }
+@media(max-width:768px) {
+  .sales-banner-inner { display:none; }
+  .sales-banner-mobile { display:flex; align-items:center; justify-content:space-between; padding:10px 16px; gap:10px; }
+  .sales-banner-tagline-sm { font-family:sans-serif; font-size:0.72rem; font-weight:600; color:rgba(255,255,255,.75); }
+  .sales-banner-tagline-sm span { color:#c9a84c; }
+  .sales-banner-btn-sm { background:#c9a84c; color:#0f2027; border:none; padding:8px 14px; border-radius:7px; font-family:sans-serif; font-size:0.7rem; font-weight:800; cursor:pointer; white-space:nowrap; }
+  nav.banner-visible { top:52px !important; }
+  #hero.banner-visible { padding-top:112px !important; }
+}
+@media(min-width:769px) {
+  nav.banner-visible { top:64px !important; }
+  #hero.banner-visible { padding-top:124px !important; }
+}
+.sales-overlay { display:none; position:fixed; inset:0; z-index:10001; background:rgba(0,0,0,.78); backdrop-filter:blur(8px); align-items:center; justify-content:center; padding:20px; }
+.sales-overlay.open { display:flex; animation:salesOverlayIn .3s ease; }
+@keyframes salesOverlayIn { from{opacity:0} to{opacity:1} }
+.sales-modal { background:#fff; border-radius:24px; overflow:hidden; width:min(560px,96vw); box-shadow:0 40px 100px rgba(0,0,0,.5); animation:salesModalIn .35s cubic-bezier(.4,0,.2,1); max-height:90vh; overflow-y:auto; }
+@keyframes salesModalIn { from{transform:scale(.9) translateY(20px);opacity:0} to{transform:scale(1) translateY(0);opacity:1} }
+.sales-header { background:linear-gradient(135deg,#0f2027,#1a3040); padding:clamp(20px,4vw,28px); text-align:center; position:relative; }
+.sales-close { position:absolute; top:14px; right:14px; width:32px; height:32px; border-radius:50%; background:rgba(255,255,255,.1); border:none; color:#fff; font-size:1rem; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:background .2s; }
+.sales-close:hover { background:#c9a84c; color:#0f2027; }
+.sales-hbadge { display:inline-block; background:#c9a84c; color:#0f2027; font-size:0.65rem; font-weight:800; letter-spacing:2px; text-transform:uppercase; padding:5px 14px; border-radius:6px; margin-bottom:12px; font-family:sans-serif; }
+.sales-htitle { font-family:sans-serif; font-size:clamp(1.2rem,3vw,1.45rem); font-weight:800; color:#fff; line-height:1.2; margin-bottom:8px; }
+.sales-htitle span { color:#c9a84c; }
+.sales-hsub { font-family:sans-serif; font-size:clamp(0.75rem,2vw,0.8rem); color:rgba(255,255,255,.6); line-height:1.5; }
+.sales-price-row { display:flex; align-items:center; justify-content:center; gap:14px; margin-top:16px; }
+.sales-old-price { font-family:sans-serif; font-size:1.1rem; color:rgba(255,255,255,.3); text-decoration:line-through; font-weight:500; }
+.sales-new-price { font-family:sans-serif; font-size:2.2rem; font-weight:900; color:#c9a84c; line-height:1; }
+.sales-body { padding:clamp(16px,4vw,24px); }
+.sales-features { display:flex; flex-direction:column; gap:10px; margin-bottom:20px; }
+.sales-feature { display:flex; align-items:flex-start; gap:12px; padding:12px 14px; border-radius:12px; background:#f9f9f9; border:1px solid #eee; transition:border-color .2s; }
+.sales-feature:hover { border-color:rgba(201,168,76,.4); }
+.sales-feat-icon { width:34px; height:34px; border-radius:9px; flex-shrink:0; background:linear-gradient(135deg,#0f2027,#1a3040); display:flex; align-items:center; justify-content:center; font-size:.95rem; }
+.sales-feat-title { font-family:sans-serif; font-size:clamp(0.8rem,2vw,0.85rem); font-weight:700; color:#1a1a1a; margin-bottom:2px; }
+.sales-feat-desc { font-family:sans-serif; font-size:clamp(0.7rem,1.8vw,0.73rem); color:#888; line-height:1.4; }
+.sales-stripe-wrap { text-align:center; }
+.sales-guarantee { margin-top:12px; text-align:center; font-family:sans-serif; font-size:0.7rem; color:#aaa; }
+.sales-guarantee span { color:#c9a84c; font-weight:600; }
+</style>
+<div class="sales-banner">
+  <div class="sales-banner-inner">
+    <div class="sales-banner-left">
+      <div class="sales-banner-dot"></div>
+      <div class="sales-banner-tagline">Transforme ton CV en <span>site web interactif</span></div>
+    </div>
+    <div style="flex:1"></div>
+    <button class="sales-banner-btn" onclick="openSales()">✦ Découvrir mon offre</button>
+  </div>
+  <div class="sales-banner-mobile">
+    <div class="sales-banner-tagline-sm">CV web <span>interactif</span></div>
+    <button class="sales-banner-btn-sm" onclick="openSales()">✦ Découvrir mon offre</button>
+  </div>
+</div>
+<div class="sales-overlay" id="salesOverlay" onclick="if(event.target===this)closeSales()">
+  <div class="sales-modal">
+    <div class="sales-header">
+      <button class="sales-close" onclick="closeSales()">✕</button>
+      <div class="sales-hbadge">✦ Offre exclusive</div>
+      <div class="sales-htitle">Mon offre pour<br>ton <span>CV interactif</span></div>
+      <div class="sales-hsub">Tout ce qu'il faut pour avoir un CV web qui impressionne les recruteurs</div>
+      <div class="sales-price-row">
+        <div class="sales-old-price">197 €</div>
+        <div class="sales-new-price"><sup>€</sup>97</div>
+      </div>
+    </div>
+    <div class="sales-body">
+      <div class="sales-features">
+        <div class="sales-feature"><div class="sales-feat-icon">💻</div><div><div class="sales-feat-title">Ton CV interactif complet</div><div class="sales-feat-desc">Un site web CV sur-mesure, moderne et navigable — livré prêt à partager aux recruteurs</div></div></div>
+        <div class="sales-feature"><div class="sales-feat-icon">🎓</div><div><div class="sales-feat-title">Formation à l'installation</div><div class="sales-feat-desc">Tutoriel pas-à-pas pour héberger et mettre à jour ton CV toi-même, sans technique</div></div></div>
+        <div class="sales-feature"><div class="sales-feat-icon">💬</div><div><div class="sales-feat-title">SAV WhatsApp inclus</div><div class="sales-feat-desc">Accès direct par message pour toute modification ou question — réponse sous 24h</div></div></div>
+      </div>
+      <div class="sales-stripe-wrap">
+        <script async src="https://js.stripe.com/v3/buy-button.js"></script>
+        <stripe-buy-button buy-button-id="buy_btn_1TcL9kEPhm1snxO0TS5KO10a" publishable-key="pk_live_51I3KPJEPhm1snxO0QETpCk4qFkVTcmWrj5he23xv4y4ReTf6gaK1Mv9GPvgSrc1G0b1ovtNsrodN7x8eMzkX9bw200jAZxtEzh"></stripe-buy-button>
+      </div>
+      <div class="sales-guarantee">🔒 Paiement sécurisé Stripe · <span>Satisfait ou remboursé 7 jours</span></div>
+    </div>
+  </div>
+</div>
+
+<script>
+// Cursor
+const cur=document.getElementById('cursor'),ring=document.getElementById('cursorRing');
+let mx=0,my=0,rx=0,ry=0;
+if(cur){
+  document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cur.style.left=mx+'px';cur.style.top=my+'px';});
+  (function anim(){rx+=(mx-rx)*.12;ry+=(my-ry)*.12;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(anim);})();
+}
+
+// Pages
+function showPage(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-links button').forEach(b=>b.classList.remove('active'));
+  const t=document.getElementById(id);
+  t.classList.add('active');
+  if(id==='hero') t.style.display='grid'; else t.style.display='block';
+  document.getElementById('nav-'+id).classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+  if(id==='competences') setTimeout(animBars,200);
+}
+
+// Accordion
+function toggleXp(h){
+  const item=h.parentElement;
+  const was=item.classList.contains('open');
+  document.querySelectorAll('.xp-item').forEach(x=>x.classList.remove('open'));
+  if(!was) item.classList.add('open');
+}
+
+// Bars
+function animBars(){
+  document.querySelectorAll('.skill-fill').forEach(b=>b.style.width=b.getAttribute('data-w'));
+}
+
+// Video
+function openVidFull(){document.getElementById('vidFullOverlay').classList.add('open');}
+function closeVidFull(){document.getElementById('vidFullOverlay').classList.remove('open');}
+
+// Sales
+function openSales(){document.getElementById('salesOverlay').classList.add('open');}
+function closeSales(){document.getElementById('salesOverlay').classList.remove('open');}
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeVidFull();closeSales();}});
+
+// Banner after 5 min
+setTimeout(function(){
+  var b=document.querySelector('.sales-banner');
+  if(b){
+    b.style.display='block';
+    document.querySelector('nav').classList.add('banner-visible');
+    var h=document.getElementById('hero');
+    if(h) h.classList.add('banner-visible');
+  }
+},5*60*1000);
+</script>
+</body>
+</html>
